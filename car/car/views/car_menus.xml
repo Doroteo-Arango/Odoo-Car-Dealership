@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem id="vehicle_menu" name="Vehicles">
+        <menuitem id="advertisements_menu" name="Advertisements">
+            <menuitem id="properties_menu" action="vehicle_property_model_action" />
+        </menuitem>
+        <menuitem id="settings_menu" name="Settings">
+            <menuitem id="property_types_menu" action="property_type_action" />
+            <menuitem id="property_tags_menu" action="property_tag_action" />
+        </menuitem>
+    </menuitem>
+</odoo>

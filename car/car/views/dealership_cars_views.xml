@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<odoo>
+	<record id="vehicle_property_model_action" model="ir.actions.act_window">
+        <field name="name">Vehicles</field>
+        <field name="res_model">vehicle.property</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_available': True}</field>
+    </record>
+
+    <record id="vehicle_property_view_kanban" model="ir.ui.view">
+		<field name="name">vehicle.property.kanban</field>
+		<field name="model">vehicle.property</field>
+		<field name="arch" type="xml">
+			<kanban records_draggable="false" group_create="false" default_group_by="property_type_id">
+				<field name="state"/>
+				<templates>
+					<t t-name="kanban-box">
+						<div class="oe_kanban_global_click">
+							<b>
+								<field name="name"/>
+							</b>
+							<p>
+								<field name="tag_ids" options="{'color_field': 'color'}" />
+								<span>Best Offer: </span>
+								<field name="best_price"/>
+								<div t-if="record.state.raw_value == 'offer_received'">
+									<span>Expected Price: </span>
+									<field name="expected_price"/>
+								</div>
+								<div t-if="record.state.raw_value == 'offer_accepted'">
+									<span>Selling Price: </span>
+									<field name="selling_price"/>
+								</div>
+							</p>
+						</div>
+					</t>
+				</templates>
+			</kanban>
+		</field>
+	</record>
+
+    <record id="vehicle_property_view_tree" model="ir.ui.view">
+    <field name="name">vehicle.property.tree</field>
+    <field name="model">vehicle.property</field>
+    <field name="arch" type="xml">
+      <tree string="PropertyList" decoration-success="state in ['offer_received', 'offer_accepted']" decoration-bf="state=='offer_accepted'" decoration-muted="state=='sold'">
+        <field name="name"/>
+        <field name="fuel_type"/>
+        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+        <field name="seats"/>
+        <field name="expected_price"/>
+        <field name="selling_price"/>
+        <field name="date_availability" optional="hide" />
+        <field name="state" invisible="1" />
+      </tree>
+    </field>
+    </record>
+
+    <record id="vehicle_property_view_form" model="ir.ui.view">
+        <field name="name">vehicle.property.form</field>
+        <field name="model">vehicle.property</field>
+        <field name="arch" type="xml">
+            <form string="PropertyForm">
+            <header>
+                <button type="object" string="Sold" name="finish_sale" states="offer_accepted" />
+                <button type="object" string="Cancel" name="cancel_sale" states="new,offer_received" />
+                <field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold" />
+            </header>
+            <sheet>
+                <h1>
+                <field name="name"/>
+                <p>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" />
+                </p>
+                </h1>
+                <group>
+                <group>
+                    <field name="property_type_id" options="{'no_create': True, 'no_create_edit': True, 'can_create': False, 'can_write': False}" />
+                    <field name="fuel_type"/>
+                    <field name="date_availability"/>
+                </group>
+                <group>
+                    <field name="expected_price"/>
+                    <field name="best_price"/>
+                    <field name="selling_price"/>
+                </group>
+                </group>
+                <notebook>
+                <page string="Description">
+                    <group>
+                    <field name="description"/>
+                    <field name="seats"/>
+                    </group>
+                </page>
+                <page string="Offers">
+                    <group>
+                    <field name="offer_ids" attrs="{'readonly': [('state', 'in', ('offer accepted', 'sold', 'canceled'))]}" />
+                    </group>
+                </page>
+                <page string="Other Info">
+                    <group>
+                    <field name="seller_id"/>
+                    <field name="buyer_id"/>
+                    </group>
+                </page>
+                </notebook>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="vehicle_property_view_search" model="ir.ui.view">
+        <field name="name">vehicle.property.search</field>
+        <field name="model">vehicle.property</field>
+        <field name="arch" type="xml">
+            <search string="PropertySearch">
+            <field name="name"/>
+            <field name="fuel_type"/>
+            <field name="expected_price"/>
+            <field name="seats"/>
+            <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            <filter name="available" string="Available" domain="['|', ('state', '=', 'new'), ('state','=', 'offer received') ]"/>
+            <group string="Group By" expand="1">
+                <filter name="fuel_type" string="fuel_type" context="{'group_by':'fuel_type'}"/>
+            </group>
+            </search>
+        </field>
+    </record>
+</odoo>
