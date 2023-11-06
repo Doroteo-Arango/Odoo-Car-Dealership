@@ -38,4 +38,4 @@ This module is focused on managing vehicular assets, which is a specific busines
 - UI development knowledge using HTML.
 
 ## Conclusion
-By building projects in Odoo, one can build their own expertise of Python frameworks. This specific module can be a valuable asset for managing real estate assets in your business. In the future, it can be easily rearranged to suit a similar business need, perhaps for a car-salesman service.
+By building projects in Odoo, one can build their own expertise of Python frameworks. This specific module can be a valuable asset for managing business assets in your business.
